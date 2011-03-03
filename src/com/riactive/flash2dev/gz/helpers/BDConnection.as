@@ -5,6 +5,7 @@ package com.riactive.flash2dev.gz.helpers
 	import flash.data.SQLConnection;
 	import flash.data.SQLResult;
 	import flash.data.SQLStatement;
+	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.SQLErrorEvent;
 	import flash.events.SQLEvent;
@@ -26,10 +27,13 @@ package com.riactive.flash2dev.gz.helpers
 			if(sqlConexion == null){
 				sqlConexion = new SQLConnection();
 				asignarListeners();
-				sqlArchivo = File.applicationDirectory.resolvePath("CalcGas.db");
+				sqlArchivo = File.applicationDirectory.resolvePath("GzGasCalc.db");
 				sqlConexion.openAsync(sqlArchivo);
 			}
-			trace("Ya estamos conectados.");
+			else{
+				sqlConexion.close();
+				sqlConexion.openAsync(sqlArchivo);
+			}
 		}
 		
 		private function asignarListeners():void
@@ -44,9 +48,9 @@ package com.riactive.flash2dev.gz.helpers
 				sqlSentencia = new SQLStatement();
 			}
 			sqlSentencia.sqlConnection = sqlConexion;
-			sqlSentencia.addEventListener(SQLEvent.RESULT, sentenciaResultHandle);
+			sqlSentencia.addEventListener(SQLEvent.RESULT, sentenciaCreacionResultHandle);
 			sqlSentencia.addEventListener(SQLErrorEvent.ERROR, sentenciaErrorHandle);
-			var sql:String = "CREATE TABLE IF NOT EXISTS comprasGas (compra_id INTEGER PRIMARY KEY AUTOINCREMENT,  fecha DATETIME,  litros NUMERIC, odometro NUMERIC);";
+			var sql:String = "CREATE TABLE IF NOT EXISTS comprasGas (compra_id INTEGER PRIMARY KEY AUTOINCREMENT,  fecha DATETIME,  litros DECIMAL(6,3) , odometro NUMERIC);";
 			sqlSentencia.text = sql;
 			sqlSentencia.execute();
 		}
@@ -57,12 +61,10 @@ package com.riactive.flash2dev.gz.helpers
 			trace("Details:", event.error.message);
 		}
 		
-		protected function sentenciaResultHandle(event:SQLEvent):void
+		protected function sentenciaCreacionResultHandle(event:SQLEvent):void
 		{
+			sqlSentencia.removeEventListener(SQLEvent.RESULT, sentenciaCreacionResultHandle);
 			var sqlResultado:SQLResult = sqlSentencia.getResult();
-			var evento:ComprasGasEvent = new ComprasGasEvent(ComprasGasEvent.OCURRIO, true);
-			evento.model = new ArrayCollection(sqlResultado.data);
-			dispatchEvent(evento);
 		}
 		
 		protected function sentenciaErrorHandle(event:SQLErrorEvent):void
@@ -75,7 +77,19 @@ package com.riactive.flash2dev.gz.helpers
 		{
 			sqlSentencia.text = query;
 			sqlSentencia.execute();
+			sqlSentencia.addEventListener(SQLEvent.RESULT, sentenciaInsertResultHandle);
 		}
+		
+		protected function sentenciaInsertResultHandle(event:SQLEvent):void
+		{
+			sqlSentencia.removeEventListener(SQLEvent.RESULT, sentenciaInsertResultHandle);
+			var sqlResultado:SQLResult = sqlSentencia.getResult();
+			var evento:ComprasGasEvent = new ComprasGasEvent(ComprasGasEvent.OCURRIO, true);
+			evento.model = new ArrayCollection(sqlResultado.data);
+			dispatchEvent(evento);
+			sqlConexion.close();
+		}
+		
 		
 	}
 }

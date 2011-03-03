@@ -19,13 +19,11 @@
 			{
 				var hoy:Date = new Date();
 				compraVO.fecha = hoy;
-				compraVO.litros = gasLitros.value;
-				compraVO.odometro = odometro.value;
+				compraVO.litros = Number(gasLitros.text);
+				compraVO.odometro = Number(odometro.text);
 				compras.salvar(compraVO);
 				navigator.popToFirstView();
 			}
-
-			
 
 		]]>
 	</fx:Script>
@@ -33,17 +31,19 @@
 	<fx:Declarations>
 		<valueobjects:CompraGasVO id="compraVO"/>
 	</fx:Declarations>
-	<s:HGroup width="100%" height="20%">
+	<s:HGroup width="100%" height="20%" paddingLeft="10" paddingRight="10" verticalAlign="middle">
 		<s:Label text="Medidor odometro"/>
 		<mx:Spacer width="100%"/>
-		<s:NumericStepper id="odometro"/>
+		<s:TextInput id="odometro" restrict="0-9" widthInChars="6" width="250"/>
 	</s:HGroup>
-	<s:HGroup width="100%" height="20%">
+	<s:HGroup width="100%" height="20%" paddingLeft="10" paddingRight="10" verticalAlign="middle">
 		<s:Label text="Litros de gasolina"/>
 		<mx:Spacer width="100%"/>
-		<s:NumericStepper id="gasLitros"/>
+		<s:TextInput id="gasLitros" restrict="0-9." widthInChars="6" width="250"/>
 	</s:HGroup>
-	
-	<s:Button id="guardarButton" label="Guardar!"
-			  click="guardarButton_clickHandler(event)"/>
+	<s:HGroup width="100%" paddingRight="10" paddingLeft="10" verticalAlign="middle">
+		<mx:Spacer width="100%"/>
+		<s:Button id="guardarButton" label="Guardar!"
+				  click="guardarButton_clickHandler(event)"/>
+	</s:HGroup>
 </s:View>
