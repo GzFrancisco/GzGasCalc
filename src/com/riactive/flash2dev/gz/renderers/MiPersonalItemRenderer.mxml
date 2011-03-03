@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:MobileIconItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark"
+				messageField="litros"
+				labelFunction="etiqueta"
+				messageFunction="mensaje">
+	<s:states> 
+		<s:State name="normal"/> 
+		<s:State name="hovered"/> 
+	</s:states>
+	<fx:Script>
+		<![CDATA[
+			private function etiqueta(object:Object):String
+			{
+				return "Litros: " + object.litros + "  -  Odometro: " + object.odometro;
+			}
+			private function mensaje(object:Object):String
+			{
+				return object.fecha.date + "/" + (object.fecha.month+1) + "/" + object.fecha.fullYear;
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+	</fx:Declarations>
+</s:MobileIconItemRenderer>

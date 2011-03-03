@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:MobileApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					 xmlns:s="library://ns.adobe.com/flex/spark"
+					 firstView="com.riactive.flash2dev.gz.views.MostrarRegistros">
+
+	<fx:Script>
+		<![CDATA[
+			import com.riactive.flash2dev.gz.views.AgregarRegistro;
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				//this.navigator.pushView(com.riactive.flash2dev.gz.views.AgregarRegistro);
+				navigator.popToFirstView();
+			}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:navigationContent>
+		<s:Button label="Inicio" click="button1_clickHandler(event)"/>
+	</s:navigationContent>
+	<s:titleContent>
+		<s:Label text="GzGasCalc"/>
+	</s:titleContent>
+	<!--<s:actionContent>
+		<s:TextInput id="search"/>
+	</s:actionContent>-->
+	
+</s:MobileApplication>
